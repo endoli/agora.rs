@@ -64,7 +64,7 @@ impl<A: PartialEq, M> Caucus<A, M> {
     }
 
     /// Broadcast a message to the actors in the caucus.
-    pub fn broadcast(&mut self, _sender: A, _message: M) -> Result<(), ()> {
+    pub fn broadcast(&self, _sender: A, _message: M) -> Result<(), ()> {
         // How do we actually send a message to the actors?
         Ok(())
     }
