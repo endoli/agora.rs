@@ -1,0 +1,6 @@
+[package]
+name = "agora"
+version = "0.1.0"
+authors = ["Bruce Mitchener <bruce.mitchener@gmail.com>"]
+
+[dependencies]
