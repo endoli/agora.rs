@@ -49,7 +49,7 @@ impl<S, O, T> Lock<S, O, T> for False {
 /// Lock that is valid if all of the constituent locks are also valid.
 pub struct And<S, O, T> {
     /// Constituent locks that must be valid for this to be valid.
-    pub locks: Vec<Box<Lock<S, O, T>>>,
+    pub locks: Vec<Box<dyn Lock<S, O, T>>>,
 }
 
 impl<S, O: Copy, T> Lock<S, O, T> for And<S, O, T> {

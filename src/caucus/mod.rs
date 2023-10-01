@@ -27,7 +27,7 @@ pub enum Operation {
 ///
 /// XXX: This should probably have a different set of type
 /// specifiers for the various operations.
-pub type CaucusLock<A, M> = Box<Lock<A, Operation, Caucus<A, M>>>;
+pub type CaucusLock<A, M> = Box<dyn Lock<A, Operation, Caucus<A, M>>>;
 
 /// A channel of communication between the actors in the caucus.
 ///
