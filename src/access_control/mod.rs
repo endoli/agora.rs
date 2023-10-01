@@ -54,7 +54,11 @@ pub struct And<S, O, T> {
 
 impl<S, O: Copy, T> Lock<S, O, T> for And<S, O, T> {
     fn try(&self, subject: &S, operation: O, target: &T) -> LockResult {
-        if self.locks.iter().all(|lock| lock.try(subject, operation, target).is_ok()) {
+        if self
+            .locks
+            .iter()
+            .all(|lock| lock.try(subject, operation, target).is_ok())
+        {
             Ok(())
         } else {
             Err(())
