@@ -55,16 +55,16 @@ impl<A: PartialEq, M> Caucus<A, M> {
     }
 
     /// Remove a actor from the caucus.
-    pub fn remove_actor(&mut self, actor: A) -> Result<(), AccessDenied> {
+    pub fn remove_actor(&mut self, actor: &A) -> Result<(), AccessDenied> {
         self.actors
             .iter()
-            .position(|m| m == &actor)
+            .position(|m| m == actor)
             .map(|pos| self.actors.remove(pos));
         Ok(())
     }
 
     /// Broadcast a message to the actors in the caucus.
-    pub fn broadcast(&self, _sender: A, _message: M) -> Result<(), AccessDenied> {
+    pub fn broadcast(&self, _sender: &A, _message: &M) -> Result<(), AccessDenied> {
         // How do we actually send a message to the actors?
         Ok(())
     }
