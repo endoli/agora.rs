@@ -11,10 +11,13 @@
 //!
 //! XXX: Can we use macaroons instead?
 
+/// Used as an error in a [`Lock`] result.
+pub struct AccessDenied;
+
 /// The result type for testing a `Lock`.
 ///
 /// XXX: This will clearly evolve to be more specific in the types.
-pub type LockResult = Result<(), ()>;
+pub type LockResult = Result<(), AccessDenied>;
 
 /// Base trait for nodes in an ACL AST.
 ///
@@ -42,7 +45,7 @@ pub struct False {}
 
 impl<S, O, T> Lock<S, O, T> for False {
     fn try(&self, _subject: &S, _operation: O, _target: &T) -> LockResult {
-        Err(())
+        Err(AccessDenied)
     }
 }
 
@@ -61,7 +64,7 @@ impl<S, O: Copy, T> Lock<S, O, T> for And<S, O, T> {
         {
             Ok(())
         } else {
-            Err(())
+            Err(AccessDenied)
         }
     }
 }

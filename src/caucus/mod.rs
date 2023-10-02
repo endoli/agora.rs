@@ -11,7 +11,7 @@
 //! list, a discussion around an article, collaboration on a
 //! document, etc.
 
-use access_control::Lock;
+use access_control::{AccessDenied, Lock};
 
 /// Caucus operations, used for access control.
 pub enum Operation {
@@ -48,14 +48,14 @@ pub struct Caucus<A, M> {
 
 impl<A: PartialEq, M> Caucus<A, M> {
     /// Add a actor to the caucus.
-    pub fn add_actor(&mut self, actor: A) -> Result<(), ()> {
+    pub fn add_actor(&mut self, actor: A) -> Result<(), AccessDenied> {
         self.join_lock
             .try(&actor, Operation::Join, self)
             .map(|_| self.actors.push(actor))
     }
 
     /// Remove a actor from the caucus.
-    pub fn remove_actor(&mut self, actor: A) -> Result<(), ()> {
+    pub fn remove_actor(&mut self, actor: A) -> Result<(), AccessDenied> {
         self.actors
             .iter()
             .position(|m| m == &actor)
@@ -64,7 +64,7 @@ impl<A: PartialEq, M> Caucus<A, M> {
     }
 
     /// Broadcast a message to the actors in the caucus.
-    pub fn broadcast(&self, _sender: A, _message: M) -> Result<(), ()> {
+    pub fn broadcast(&self, _sender: A, _message: M) -> Result<(), AccessDenied> {
         // How do we actually send a message to the actors?
         Ok(())
     }
