@@ -2,5 +2,6 @@
 name = "agora"
 version = "0.1.0"
 authors = ["Bruce Mitchener <bruce.mitchener@gmail.com>"]
+license = "MIT OR Apache-2.0"
 
 [dependencies]
