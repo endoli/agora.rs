@@ -11,7 +11,7 @@
 //! list, a discussion around an article, collaboration on a
 //! document, etc.
 
-use access_control::{AccessDenied, Lock};
+use crate::access_control::{AccessDenied, Lock};
 
 /// Caucus operations, used for access control.
 pub enum Operation {
