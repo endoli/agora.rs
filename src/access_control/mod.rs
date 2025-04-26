@@ -28,14 +28,14 @@ pub type LockResult = Result<(), AccessDenied>;
 /// * `T`: Target. The target of the operation.
 pub trait Lock<S, O, T> {
     /// Test whether or not the lock's requirements have been satisfied.
-    fn try(&self, subject: &S, operation: O, target: &T) -> LockResult;
+    fn attempt(&self, subject: &S, operation: O, target: &T) -> LockResult;
 }
 
 /// Lock that is always valid.
 pub struct True {}
 
 impl<S, O, T> Lock<S, O, T> for True {
-    fn try(&self, _subject: &S, _operation: O, _target: &T) -> LockResult {
+    fn attempt(&self, _subject: &S, _operation: O, _target: &T) -> LockResult {
         Ok(())
     }
 }
@@ -44,7 +44,7 @@ impl<S, O, T> Lock<S, O, T> for True {
 pub struct False {}
 
 impl<S, O, T> Lock<S, O, T> for False {
-    fn try(&self, _subject: &S, _operation: O, _target: &T) -> LockResult {
+    fn attempt(&self, _subject: &S, _operation: O, _target: &T) -> LockResult {
         Err(AccessDenied)
     }
 }
@@ -56,11 +56,11 @@ pub struct And<S, O, T> {
 }
 
 impl<S, O: Copy, T> Lock<S, O, T> for And<S, O, T> {
-    fn try(&self, subject: &S, operation: O, target: &T) -> LockResult {
+    fn attempt(&self, subject: &S, operation: O, target: &T) -> LockResult {
         if self
             .locks
             .iter()
-            .all(|lock| lock.try(subject, operation, target).is_ok())
+            .all(|lock| lock.attempt(subject, operation, target).is_ok())
         {
             Ok(())
         } else {

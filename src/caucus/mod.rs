@@ -50,7 +50,7 @@ impl<A: PartialEq, M> Caucus<A, M> {
     /// Add a actor to the caucus.
     pub fn add_actor(&mut self, actor: A) -> Result<(), AccessDenied> {
         self.join_lock
-            .try(&actor, Operation::Join, self)
+            .attempt(&actor, Operation::Join, self)
             .map(|_| self.actors.push(actor))
     }
 
