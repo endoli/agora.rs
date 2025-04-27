@@ -22,5 +22,5 @@
 )]
 
 pub mod access_control;
-pub mod accounts;
 pub mod caucus;
+pub mod identity;
