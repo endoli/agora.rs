@@ -6,7 +6,7 @@
 
 //! A communication platform.
 //!
-//! Agora provides a foundation for communicating in a variety of
+//! Interloko provides a foundation for communicating in a variety of
 //! ways among a set of people.
 //!
 //! This is a collection of sketches right now that will likely

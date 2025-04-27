@@ -1,6 +1,6 @@
-# Agora
+# Interloko
 
-Agora is a communication platform. The ideas behind Agora are still
+Interloko is a communication platform. The ideas behind Interloko are still
 rapidly evolving.
 
 This project exists to explore some ideas:
