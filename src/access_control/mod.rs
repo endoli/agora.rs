@@ -4,63 +4,63 @@
 // option. This file may not be copied, modified, or distributed
 // except according to those terms.
 
-//! Access control is provided by lock objects which can be
+//! Access control is provided by guard objects which can be
 //! composed in a tree structure, like an AST. Specicalized
 //! implementations can be provided by implementing the
-//! `Lock` trait.
+//! `Guard` trait.
 //!
 //! XXX: Can we use macaroons instead?
 
-/// Used as an error in a [`Lock`] result.
+/// Used as an error in a [`Guard`] result.
 pub struct AccessDenied;
 
-/// The result type for testing a `Lock`.
+/// The result type for testing a `Guard`.
 ///
 /// XXX: This will clearly evolve to be more specific in the types.
-pub type LockResult = Result<(), AccessDenied>;
+pub type GuardResult = Result<(), AccessDenied>;
 
 /// Base trait for nodes in an ACL AST.
 ///
 /// Type Parameters:
 ///
 /// * `S`: Subject. The object carrying out an operation.
-/// * `O`: Operation: The operation that this lock is being tested for.
+/// * `O`: Operation: The operation that this guard is being tested for.
 /// * `T`: Target. The target of the operation.
-pub trait Lock<S, O, T> {
-    /// Test whether or not the lock's requirements have been satisfied.
-    fn attempt(&self, subject: &S, operation: O, target: &T) -> LockResult;
+pub trait Guard<S, O, T> {
+    /// Test whether or not the guard's requirements have been satisfied.
+    fn attempt(&self, subject: &S, operation: O, target: &T) -> GuardResult;
 }
 
-/// Lock that is always valid.
+/// Guard that is always valid.
 pub struct True {}
 
-impl<S, O, T> Lock<S, O, T> for True {
-    fn attempt(&self, _subject: &S, _operation: O, _target: &T) -> LockResult {
+impl<S, O, T> Guard<S, O, T> for True {
+    fn attempt(&self, _subject: &S, _operation: O, _target: &T) -> GuardResult {
         Ok(())
     }
 }
 
-/// Lock that is always invalid.
+/// Guard that is always invalid.
 pub struct False {}
 
-impl<S, O, T> Lock<S, O, T> for False {
-    fn attempt(&self, _subject: &S, _operation: O, _target: &T) -> LockResult {
+impl<S, O, T> Guard<S, O, T> for False {
+    fn attempt(&self, _subject: &S, _operation: O, _target: &T) -> GuardResult {
         Err(AccessDenied)
     }
 }
 
-/// Lock that is valid if all of the constituent locks are also valid.
+/// Guard that is valid if all of the constituent guards are also valid.
 pub struct And<S, O, T> {
-    /// Constituent locks that must be valid for this to be valid.
-    pub locks: Vec<Box<dyn Lock<S, O, T>>>,
+    /// Constituent guards that must be valid for this to be valid.
+    pub guards: Vec<Box<dyn Guard<S, O, T>>>,
 }
 
-impl<S, O: Copy, T> Lock<S, O, T> for And<S, O, T> {
-    fn attempt(&self, subject: &S, operation: O, target: &T) -> LockResult {
+impl<S, O: Copy, T> Guard<S, O, T> for And<S, O, T> {
+    fn attempt(&self, subject: &S, operation: O, target: &T) -> GuardResult {
         if self
-            .locks
+            .guards
             .iter()
-            .all(|lock| lock.attempt(subject, operation, target).is_ok())
+            .all(|guard| guard.attempt(subject, operation, target).is_ok())
         {
             Ok(())
         } else {
